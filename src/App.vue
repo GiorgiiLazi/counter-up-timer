@@ -1,9 +1,9 @@
 <template>
   <h1>George's Reaction Timer</h1>
-  <button @click="countdown" class="start">
+  <button @click="countdown" class="start" :disabled="start">
     Start countdown
   </button>
-  <Block @stop="stopCountdown" v-if="start"></Block>
+  <Block @stop="stopCountdown" v-if="showBlock"></Block>
   <Results :timeElapsed="timerResult" v-if="showResult"></Results>
 </template>
 
@@ -18,23 +18,28 @@ export default {
   },
   data(){
     return{
+      delay: null,
       start: false,
+      showBlock: false,
       showResult: false,
       timerResult: 0,
     }
   },
   methods: {
     countdown(){
-      this.showResult = false
+      this.delay = 1000 + Math.random() * 6000
+      this.showResult = false,
+      this.start = true,
       setTimeout(()=>{
-        this.start = true
-      }, 4000)
+        this.showBlock= true
+      }, this.delay)
 
     },
     stopCountdown(time){
-      this.start = false;
+      this.showBlock= false;
       this.showResult = true;
-      this.timerResult = time
+      this.timerResult = time,
+      this.start = false
     }
   }
 
@@ -62,5 +67,8 @@ export default {
   color: white;
   font-size: 15px;
   cursor: pointer;
+}
+.start:disabled{
+   background-color: hsl(120, 58%, 36%, 0.5);
 }
 </style>
